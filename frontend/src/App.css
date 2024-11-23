@@ -32,14 +32,14 @@
   flex: 1;
   flex-basis: 65%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
 
 .app-block {
   padding: 20px;
   margin: 20px;
   background-color: #f2f2f2;
-  background-repeat: 5px;
+  border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0, 1);
 }
 

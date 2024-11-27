@@ -1,9 +1,18 @@
-import { UseSelector, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteBook } from '../../redux/books/actionCreaters';
+
 import './BookList.css';
 
 const BookList = () => {
   //каждый раз когда меняется state - ререндерится этот компонент
   const books = useSelector((state) => state.books);
+  const dispatch = useDispatch();
+
+  //Удаление книги
+  const handleDeleteBook = (id) => {
+    // console.log(deleteBook(id));
+    dispatch(deleteBook(id));
+  };
 
   return (
     <div className="app-block book-list">
@@ -13,9 +22,18 @@ const BookList = () => {
       ) : (
         <ul>
           {books.map((book, i) => (
-            <li key={i}>
+            <li key={book.id}>
               <div className="book-info">
                 {++i}. {book.title} by <strong>{book.author}</strong>
+              </div>
+              <div className="book-actions">
+                <button
+                  onClick={() => {
+                    handleDeleteBook(book.id);
+                  }}
+                >
+                  Delete
+                </button>
               </div>
             </li>
           ))}

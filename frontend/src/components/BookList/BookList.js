@@ -1,12 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { BsBookmarkStar, BsBookmarkStarFill } from 'react-icons/bs';
 import { deleteBook, toggleFavorite } from '../../redux/books/actionCreaters';
-
+import { selectTitleFilter } from '../../redux/slices/filterSlice';
 import './BookList.css';
 
 const BookList = () => {
   //каждый раз когда меняется state - ререндерится этот компонент
   const books = useSelector((state) => state.books);
+  const titleFilter = useSelector(selectTitleFilter);
   const dispatch = useDispatch();
 
   //Удаление книги
@@ -19,6 +20,16 @@ const BookList = () => {
     dispatch(toggleFavorite(id));
   };
 
+  const filteredBooks = books.filter((book) => {
+    const mathesTitle = book.title
+      .toLowerCase()
+      .includes(titleFilter.toLowerCase());
+    //прикол в том, что если в строке что-то есть и проверять "выафыва" - непустую строку на инклудс "" - пустой строки, то возвражается ТРУ! Не логично, но факт.
+    console.log({ Заголовок: book.title, Соответствие: mathesTitle });
+    //
+    return mathesTitle;
+  });
+
   return (
     <div className="app-block book-list">
       <h2>Book List</h2>
@@ -26,7 +37,7 @@ const BookList = () => {
         <p>No books available</p>
       ) : (
         <ul>
-          {books.map((book, i) => (
+          {filteredBooks.map((book, i) => (
             <li key={book.id}>
               <div className="book-info">
                 {++i}. {book.title} by <strong>{book.author}</strong>

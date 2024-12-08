@@ -1,13 +1,17 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { BsBookmarkStar, BsBookmarkStarFill } from 'react-icons/bs';
 import { deleteBook, toggleFavorite } from '../../redux/books/actionCreaters';
-import { selectTitleFilter } from '../../redux/slices/filterSlice';
+import {
+  selectTitleFilter,
+  selectAuthorFilter,
+} from '../../redux/slices/filterSlice';
 import './BookList.css';
 
 const BookList = () => {
   //каждый раз когда меняется state - ререндерится этот компонент
   const books = useSelector((state) => state.books);
   const titleFilter = useSelector(selectTitleFilter);
+  const authorFilter = useSelector(selectAuthorFilter);
   const dispatch = useDispatch();
 
   //Удаление книги
@@ -24,10 +28,14 @@ const BookList = () => {
     const mathesTitle = book.title
       .toLowerCase()
       .includes(titleFilter.toLowerCase());
-    //прикол в том, что если в строке что-то есть и проверять "выафыва" - непустую строку на инклудс "" - пустой строки, то возвражается ТРУ! Не логично, но факт.
-    console.log({ Заголовок: book.title, Соответствие: mathesTitle });
+    //прикол в том, что если в строке что-то есть и проверять "выафыва" - непустую, возвращает тру, если строку на инклудс "" - пустой строки, то возвражается ТРУ!
+    // console.log({ Заголовок: book.title, Соответствие: mathesTitle });
     //
-    return mathesTitle;
+    const matchesAuthor = book.author
+      .toLowerCase()
+      .includes(authorFilter.toLowerCase());
+
+    return mathesTitle && matchesAuthor;
   });
 
   return (

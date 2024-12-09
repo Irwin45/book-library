@@ -1,6 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { BsBookmarkStar, BsBookmarkStarFill } from 'react-icons/bs';
-import { deleteBook, toggleFavorite } from '../../redux/books/actionCreaters';
+// import { deleteBook, toggleFavorite } from '../../redux/books/actionCreaters';
+import {
+  deleteBook,
+  toggleFavorite,
+  selectBooks,
+} from '../../redux/slices/booksSlice';
 import {
   selectTitleFilter,
   selectAuthorFilter,
@@ -10,7 +15,7 @@ import './BookList.css';
 
 const BookList = () => {
   //каждый раз когда меняется state - ререндерится этот компонент
-  const books = useSelector((state) => state.books);
+  const books = useSelector(selectBooks);
   const titleFilter = useSelector(selectTitleFilter);
   const authorFilter = useSelector(selectAuthorFilter);
   const onlyFavoriteFilter = useSelector(selectOnlyFavotiteFilter);

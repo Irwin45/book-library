@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
-import { addBook } from '../../redux/slices/booksSlice';
+import { addBook, thunkFunction } from '../../redux/slices/booksSlice';
 // import { addBook } from '../../redux/books/actionCreaters';
 import createBookWithID from '../../utils/createBookWithID';
 import booksData from '../../data/books.json';
@@ -20,17 +19,19 @@ const BookForm = () => {
     dispatch(addBook(createBookWithID(randomBook, 'random')));
   };
 
-  const handleAddRandomBookViaAPI = async () => {
-    try {
-      const res = await axios.get('http://localhost:4000/random-book');
-      // console.log(res);
-      // res.data && res.data.title && res.data.author;
-      if (res?.data?.title && res?.data?.author) {
-        dispatch(addBook(createBookWithID(res.data, 'API')));
-      }
-    } catch (error) {
-      console.log('Error faetchin random book', error);
-    }
+  const handleAddRandomBookViaAPI = () => {
+    dispatch(thunkFunction);
+    //старый варината. Асинк функция сразу в элементе.
+    // try {
+    //   const res = await axios.get('http://localhost:4000/random-book');
+    //   // console.log(res);
+    //   // res.data && res.data.title && res.data.author;
+    //   if (res?.data?.title && res?.data?.author) {
+    //     dispatch(addBook(createBookWithID(res.data, 'API')));
+    //   }
+    // } catch (error) {
+    //   console.log('Error faetchin random book', error);
+    // }
   };
 
   //add book

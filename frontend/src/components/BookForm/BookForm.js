@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaSpinner } from 'react-icons/fa';
-import { addBook, fetchBook } from '../../redux/slices/booksSlice';
+import {
+  addBook,
+  fetchBook,
+  selectIsLoadingViaAPI,
+} from '../../redux/slices/booksSlice';
 import { setError } from '../../redux/slices/errorSlice';
 // import { addBook } from '../../redux/books/actionCreaters';
 import createBookWithID from '../../utils/createBookWithID';
@@ -11,7 +15,7 @@ import './BookForm.css';
 const BookForm = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoadingViaAPI = useSelector(selectIsLoadingViaAPI);
   const dispatch = useDispatch();
 
   //addRandom
@@ -22,19 +26,8 @@ const BookForm = () => {
     dispatch(addBook(createBookWithID(randomBook, 'random')));
   };
 
-  const handleAddRandomBookViaAPI = async () => {
-    // возвращает промис, т.к. асинхронная, в остальных случаех возварщает просто дейтсвие
-    // console.log(
-    //   dispatch(fetchBook('http://localhost:4000/random-book-delayed')),
-    // );
-    // поэтому эту функцию делаем асинхронной
-
-    try {
-      setIsLoading(true);
-      await dispatch(fetchBook('http://localhost:4000/random-book-delayed'));
-    } finally {
-      setIsLoading(false);
-    }
+  const handleAddRandomBookViaAPI = () => {
+    dispatch(fetchBook('http://localhost:4000/random-book-delayed'));
 
     //старый варината. Асинк функция сразу в элементе.
     // try {
@@ -93,9 +86,9 @@ const BookForm = () => {
         <button
           type="button"
           onClick={handleAddRandomBookViaAPI}
-          disabled={isLoading}
+          disabled={isLoadingViaAPI}
         >
-          {isLoading ? (
+          {isLoadingViaAPI ? (
             <>
               <span>Loading Book...</span>
               <FaSpinner className="spinner"></FaSpinner>

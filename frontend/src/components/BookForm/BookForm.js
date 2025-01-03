@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { FaSpinner } from 'react-icons/fa';
 import { addBook, fetchBook } from '../../redux/slices/booksSlice';
 import { setError } from '../../redux/slices/errorSlice';
 // import { addBook } from '../../redux/books/actionCreaters';
@@ -10,6 +11,7 @@ import './BookForm.css';
 const BookForm = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   //addRandom
@@ -20,8 +22,20 @@ const BookForm = () => {
     dispatch(addBook(createBookWithID(randomBook, 'random')));
   };
 
-  const handleAddRandomBookViaAPI = () => {
-    dispatch(fetchBook('http://localhost:4000/random-book'));
+  const handleAddRandomBookViaAPI = async () => {
+    // возвращает промис, т.к. асинхронная, в остальных случаех возварщает просто дейтсвие
+    // console.log(
+    //   dispatch(fetchBook('http://localhost:4000/random-book-delayed')),
+    // );
+    // поэтому эту функцию делаем асинхронной
+
+    try {
+      setIsLoading(true);
+      await dispatch(fetchBook('http://localhost:4000/random-book-delayed'));
+    } finally {
+      setIsLoading(false);
+    }
+
     //старый варината. Асинк функция сразу в элементе.
     // try {
     //   const res = await axios.get('http://localhost:4000/random-book');
@@ -76,8 +90,19 @@ const BookForm = () => {
         <button type="button" onClick={handleAddRandomBook}>
           Add Random
         </button>
-        <button type="button" onClick={handleAddRandomBookViaAPI}>
-          Add Random via API
+        <button
+          type="button"
+          onClick={handleAddRandomBookViaAPI}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <span>Loading Book...</span>
+              <FaSpinner className="spinner"></FaSpinner>
+            </>
+          ) : (
+            'Add Random via API'
+          )}
         </button>
       </form>
     </div>

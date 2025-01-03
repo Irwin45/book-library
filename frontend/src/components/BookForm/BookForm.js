@@ -21,7 +21,7 @@ const BookForm = () => {
   };
 
   const handleAddRandomBookViaAPI = () => {
-    dispatch(fetchBook());
+    dispatch(fetchBook('http://localhost:4000/random-book'));
     //старый варината. Асинк функция сразу в элементе.
     // try {
     //   const res = await axios.get('http://localhost:4000/random-book');
